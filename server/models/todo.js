@@ -1,3 +1,6 @@
+// Load modules
+var mongoose = require('mongoose');
+
 // Todo model
 var Todo = mongoose.model('Todo', {
   text: {
@@ -15,3 +18,6 @@ var Todo = mongoose.model('Todo', {
     default: null
   }
 });
+
+// Export modules
+module.exports = {Todo};

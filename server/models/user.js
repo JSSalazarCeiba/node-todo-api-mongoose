@@ -1,3 +1,6 @@
+// Load modules
+var mongoose = require('mongoose');
+
 // User model
 var User = mongoose.model('User', {
   email: {
@@ -7,3 +10,6 @@ var User = mongoose.model('User', {
     trim: true
   }
 });
+
+// Export modules
+module.exports = {User};
