@@ -1,4 +1,5 @@
 // Load modules
+require('./config/config.js');
 const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -11,7 +12,8 @@ var {User} = require('./models/user');
 var app = express();
 app.use(bodyParser.json());
 
-var port = process.env.PORT || 3000;
+const port = process.env.PORT;
+//var port = process.env.PORT || 3000;
 
 /* --- POST --- */
 // Create todo
