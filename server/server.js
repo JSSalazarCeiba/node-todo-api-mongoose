@@ -10,6 +10,9 @@ var {User} = require('./models/user');
 var app = express();
 app.use(bodyParser.json());
 
+var port = process.env.PORT || 3000;
+
+/* --- POST --- */
 // Create todo
 app.post('/todos', (req, res) => {
   var todo = new Todo({
@@ -23,6 +26,7 @@ app.post('/todos', (req, res) => {
   });
 });
 
+/* --- GET --- */
 // Fetch all todos
 app.get('/todos', (req, res) => {
   Todo.find().then((todos) => {
@@ -45,8 +49,22 @@ app.get('/todos/:id', (req, res) => {
     .catch((error) => res.status(400).send());
 });
 
-app.listen(3000, () => {
-  console.log('Server started on port 3000');
+/* --- DELETE --- */
+// Delete a single todo by id
+app.delete('/todos/:id', (req, res) => {
+  let id = req.params.id;
+  if(!ObjectID.isValid(id)) return res.status(404).send();
+
+  Todo.findByIdAndRemove(id)
+    .then((removedTodo) => {
+      if(!removedTodo) return res.status(404).send();
+      res.send({removedTodo});
+    })
+    .catch((e) => res.status(400).send());
+});
+
+app.listen(port, () => {
+  console.log(`Server started on port ${port}`);
 });
 
 // Export modules
