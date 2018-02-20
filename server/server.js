@@ -92,5 +92,18 @@ app.patch('/todos/:id', (req, res) => {
     .catch((e) => res.status(400).send());
 });
 
+/* --- USERS ROUTES ---*/
+// Create a new User
+app.post('/users', (req, res) => {
+  let body = _.pick(req.body, ['email', 'password']);
+  let user = new User(body);
+
+  user.save().then((user) => {
+    res.send(user);
+  }).catch((e) => {
+    res.status(400).send(e);
+  });
+});
+
 // Export modules
 module.exports = {app};
