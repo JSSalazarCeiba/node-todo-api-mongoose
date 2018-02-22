@@ -1,9 +1,11 @@
 // Load modules
 const mongoose = require('mongoose');
 const validator = require('validator');
+const jwt = require('jsonwebtoken');
+const _ = require('lodash');
 
-// User model
-var User = mongoose.model('User', {
+// Define schema
+var UserSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
@@ -31,6 +33,28 @@ var User = mongoose.model('User', {
     }
   }]
 });
+
+// Override mongoose method to return only id and email in the body
+UserSchema.methods.toJSON = function() {
+  let user = this;
+  let userObject = user.toObject();
+  return _.pick(userObject, ['_id', 'email']);
+};
+
+UserSchema.methods.generateAuthToken = function() {
+  let user = this;
+  let access = 'auth';
+  let token = jwt.sign({_id: user._id.toHexString(), access}, 'abc123').toString();
+
+  user.tokens = user.tokens.concat([{access, token}]);
+
+  return user.save().then(() => {
+    return token;
+  });
+};
+
+// Define user model
+var User = mongoose.model('User', UserSchema);
 
 // Export modules
 module.exports = {User};
